@@ -1,4 +1,4 @@
-import type { FakturoidTokens } from '../types/common';
+import type { FakturoidTokens } from '../types/common.js';
 
 export interface FakturoidTokenStore {
   getTokens(tenantId: string): Promise<FakturoidTokens | null>;

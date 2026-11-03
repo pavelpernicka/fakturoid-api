@@ -1,7 +1,7 @@
 import { describe, expect, mock, test } from 'bun:test';
-import type { HttpClient } from '../http/http-client';
-import type { FakturoidAuth } from '../types/common';
-import { TodosResource } from './todos';
+import type { HttpClient } from '../http/http-client.js';
+import type { FakturoidAuth } from '../types/common.js';
+import { TodosResource } from './todos.js';
 
 describe('TodosResource', () => {
   test('list builds GET path', async () => {

@@ -1,8 +1,9 @@
-import { FakturoidApiError } from '../types/common';
+import { FakturoidApiError } from '../types/common.js';
 
 const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
 
 export interface HttpClientOptions {
+  fetch?: typeof globalThis.fetch;
   baseUrl: string;
   userAgent: string;
   /** Request timeout in milliseconds. Default 30000. */
@@ -93,6 +94,7 @@ async function withConcurrencyLimit<T>(
 }
 
 export class HttpClient {
+  private readonly fetch: typeof globalThis.fetch;
   private readonly baseUrl: string;
 
   private readonly userAgent: string;
@@ -106,6 +108,7 @@ export class HttpClient {
   private readonly concurrencyActive = { current: 0 };
 
   public constructor(options: HttpClientOptions) {
+    this.fetch = options.fetch ?? globalThis.fetch;
     this.baseUrl = options.baseUrl.replace(/\/+$/, '');
     this.userAgent = options.userAgent;
     this.requestTimeoutMs = options.requestTimeoutMs ?? DEFAULT_REQUEST_TIMEOUT_MS;
@@ -135,7 +138,7 @@ export class HttpClient {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.requestTimeoutMs);
     try {
-      const response = await fetch(url, {
+      const response = await this.fetch(url, {
         method: options.method,
         headers: {
           ...headers,
@@ -170,7 +173,7 @@ export class HttpClient {
     for (;;) {
       const response = await this.executeOneAttempt(url, options, headers);
 
-      if (RETRYABLE_STATUS_CODES.has(response.status) && attempt < MAX_RETRIES) {
+      if (options.method === 'GET' && RETRYABLE_STATUS_CODES.has(response.status) && attempt < MAX_RETRIES) {
         await consumeResponseBody(response);
         const fallbackDelay = RETRY_BASE_DELAY_MS * 2 ** attempt;
         const delay =

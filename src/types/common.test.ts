@@ -1,5 +1,5 @@
 import { describe, expect, mock, test } from 'bun:test';
-import { paginateAll } from './common';
+import { paginateAll } from './common.js';
 
 describe('paginateAll', () => {
   test('yields all items across multiple pages', async () => {

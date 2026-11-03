@@ -1,5 +1,5 @@
-import type { HttpClient } from '../http/http-client';
-import type { DateString, FakturoidAuth, MoneyAmount } from '../types/common';
+import type { HttpClient } from '../http/http-client.js';
+import type { DateString, FakturoidAuth, MoneyAmount } from '../types/common.js';
 
 /**
  * Expense payment as returned by Fakturoid API v3.

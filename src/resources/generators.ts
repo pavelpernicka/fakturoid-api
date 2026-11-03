@@ -1,4 +1,4 @@
-import type { HttpClient } from '../http/http-client';
+import type { HttpClient } from '../http/http-client.js';
 import type {
   DateString,
   FakturoidAuth,
@@ -11,8 +11,8 @@ import type {
   FakturoidVatPriceMode,
   MoneyAmount,
   PaginationOptions,
-} from '../types/common';
-import { paginateAll } from '../types/common';
+} from '../types/common.js';
+import { paginateAll } from '../types/common.js';
 
 export interface Generator {
   id: number;

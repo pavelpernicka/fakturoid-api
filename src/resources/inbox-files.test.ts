@@ -1,7 +1,7 @@
 import { describe, expect, mock, test } from 'bun:test';
-import type { HttpClient } from '../http/http-client';
-import type { FakturoidAuth } from '../types/common';
-import { InboxFilesResource } from './inbox-files';
+import type { HttpClient } from '../http/http-client.js';
+import type { FakturoidAuth } from '../types/common.js';
+import { InboxFilesResource } from './inbox-files.js';
 
 describe('InboxFilesResource', () => {
   test('list builds path with optional page', async () => {

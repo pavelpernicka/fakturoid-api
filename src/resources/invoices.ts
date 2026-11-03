@@ -1,4 +1,4 @@
-import type { HttpClient } from '../http/http-client';
+import type { HttpClient } from '../http/http-client.js';
 import type {
   DateString,
   FakturoidAuth,
@@ -16,9 +16,9 @@ import type {
   InvoiceStatus,
   MoneyAmount,
   PaginationOptions,
-} from '../types/common';
-import { paginateAll } from '../types/common';
-import type { InvoicePayment } from './invoice-payments';
+} from '../types/common.js';
+import { paginateAll } from '../types/common.js';
+import type { InvoicePayment } from './invoice-payments.js';
 
 export interface InvoicePaidAdvance {
   id: number;

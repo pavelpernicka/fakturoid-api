@@ -1,0 +1,5 @@
+Fakturoid API for TypeScript
+Derived from thinkhome-org/fakturoid-typescript-api.
+Original project: https://github.com/thinkhome-org/fakturoid-typescript-api
+Original license: Apache License 2.0 (see LICENSE).
+This fork changes Node.js module packaging, transport injection, retry behavior, tests and release automation.

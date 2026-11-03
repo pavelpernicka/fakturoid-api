@@ -1,8 +1,8 @@
 import { describe, expect, mock, test } from 'bun:test';
-import type { FakturoidTokens } from '../types/common';
-import { FakturoidApiError } from '../types/common';
-import { OAuthService } from './oauth-service';
-import type { FakturoidTokenStore } from './token-store';
+import type { FakturoidTokens } from '../types/common.js';
+import { FakturoidApiError } from '../types/common.js';
+import { OAuthService } from './oauth-service.js';
+import type { FakturoidTokenStore } from './token-store.js';
 
 describe('OAuthService', () => {
   const config = {

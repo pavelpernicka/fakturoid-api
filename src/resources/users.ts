@@ -1,5 +1,5 @@
-import type { HttpClient } from '../http/http-client';
-import type { FakturoidAllowedScope, FakturoidAuth } from '../types/common';
+import type { HttpClient } from '../http/http-client.js';
+import type { FakturoidAllowedScope, FakturoidAuth } from '../types/common.js';
 
 /**
  * User as returned by the account users list endpoint.

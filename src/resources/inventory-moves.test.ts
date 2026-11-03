@@ -1,7 +1,7 @@
 import { describe, expect, mock, test } from 'bun:test';
-import type { HttpClient } from '../http/http-client';
-import type { FakturoidAuth } from '../types/common';
-import { InventoryMovesResource } from './inventory-moves';
+import type { HttpClient } from '../http/http-client.js';
+import type { FakturoidAuth } from '../types/common.js';
+import { InventoryMovesResource } from './inventory-moves.js';
 
 describe('InventoryMovesResource', () => {
   test('list builds path with options', async () => {

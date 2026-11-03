@@ -1,4 +1,7 @@
 node_modules/
-package-lock.json
-.claude/
-.cursor/
+dist/
+*.tgz
+.env
+.env.*
+!.env.example
+coverage/

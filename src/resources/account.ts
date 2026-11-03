@@ -1,4 +1,4 @@
-import type { HttpClient } from '../http/http-client';
+import type { HttpClient } from '../http/http-client.js';
 import type {
   DateString,
   FakturoidAuth,
@@ -7,7 +7,7 @@ import type {
   FakturoidVatMode,
   FakturoidVatPriceMode,
   FakturoidVatRate,
-} from '../types/common';
+} from '../types/common.js';
 
 /**
  * Account plan as returned by the API.

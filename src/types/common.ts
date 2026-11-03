@@ -12,6 +12,8 @@ export interface FakturoidLogger {
 }
 
 export interface FakturoidAppConfig {
+  /** Injectable transport for request cancellation and testing. */
+  fetch?: typeof globalThis.fetch;
   clientId: string;
   clientSecret: string;
   redirectUri: string;

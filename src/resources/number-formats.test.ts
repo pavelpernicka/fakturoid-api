@@ -1,7 +1,7 @@
 import { describe, expect, mock, test } from 'bun:test';
-import type { HttpClient } from '../http/http-client';
-import type { FakturoidAuth } from '../types/common';
-import { NumberFormatsResource } from './number-formats';
+import type { HttpClient } from '../http/http-client.js';
+import type { FakturoidAuth } from '../types/common.js';
+import { NumberFormatsResource } from './number-formats.js';
 
 describe('NumberFormatsResource', () => {
   test('list builds GET path', async () => {

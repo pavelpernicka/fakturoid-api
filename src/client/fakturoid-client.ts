@@ -1,25 +1,25 @@
-import { OAuthService } from '../auth/oauth-service';
-import type { FakturoidTokenStore } from '../auth/token-store';
-import { HttpClient } from '../http/http-client';
-import { AccountResource } from '../resources/account';
-import { BankAccountsResource } from '../resources/bank-accounts';
-import { EventsResource } from '../resources/events';
-import { ExpensePaymentsResource } from '../resources/expense-payments';
-import { ExpensesResource } from '../resources/expenses';
-import { GeneratorsResource } from '../resources/generators';
-import { InboxFilesResource } from '../resources/inbox-files';
-import { InventoryItemsResource } from '../resources/inventory-items';
-import { InventoryMovesResource } from '../resources/inventory-moves';
-import { InvoiceMessagesResource } from '../resources/invoice-messages';
-import { InvoicePaymentsResource } from '../resources/invoice-payments';
-import { InvoicesResource } from '../resources/invoices';
-import { NumberFormatsResource } from '../resources/number-formats';
-import { RecurringGeneratorsResource } from '../resources/recurring-generators';
-import { SubjectsResource } from '../resources/subjects';
-import { TodosResource } from '../resources/todos';
-import { UsersResource } from '../resources/users';
-import { WebhooksResource } from '../resources/webhooks';
-import type { FakturoidAppConfig, FakturoidAuth, FakturoidTokens } from '../types/common';
+import { OAuthService } from '../auth/oauth-service.js';
+import type { FakturoidTokenStore } from '../auth/token-store.js';
+import { HttpClient } from '../http/http-client.js';
+import { AccountResource } from '../resources/account.js';
+import { BankAccountsResource } from '../resources/bank-accounts.js';
+import { EventsResource } from '../resources/events.js';
+import { ExpensePaymentsResource } from '../resources/expense-payments.js';
+import { ExpensesResource } from '../resources/expenses.js';
+import { GeneratorsResource } from '../resources/generators.js';
+import { InboxFilesResource } from '../resources/inbox-files.js';
+import { InventoryItemsResource } from '../resources/inventory-items.js';
+import { InventoryMovesResource } from '../resources/inventory-moves.js';
+import { InvoiceMessagesResource } from '../resources/invoice-messages.js';
+import { InvoicePaymentsResource } from '../resources/invoice-payments.js';
+import { InvoicesResource } from '../resources/invoices.js';
+import { NumberFormatsResource } from '../resources/number-formats.js';
+import { RecurringGeneratorsResource } from '../resources/recurring-generators.js';
+import { SubjectsResource } from '../resources/subjects.js';
+import { TodosResource } from '../resources/todos.js';
+import { UsersResource } from '../resources/users.js';
+import { WebhooksResource } from '../resources/webhooks.js';
+import type { FakturoidAppConfig, FakturoidAuth, FakturoidTokens } from '../types/common.js';
 
 export interface CreateFakturoidClientParams {
   config: FakturoidAppConfig;
@@ -72,6 +72,7 @@ export class FakturoidClient {
     this.http = new HttpClient({
       baseUrl: params.config.baseUrl ?? 'https://app.fakturoid.cz',
       userAgent: params.config.userAgent,
+      fetch: params.config.fetch,
       maxConcurrency: params.config.maxConcurrency,
     });
     this.oauth = new OAuthService(params.config, params.tokenStore);

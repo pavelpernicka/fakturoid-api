@@ -1,24 +1,24 @@
-export type { FakturoidTokenStore } from './auth/token-store';
+export type { FakturoidTokenStore } from './auth/token-store.js';
 export {
   createFakturoidClient,
   FakturoidClient,
   type TenantResources,
-} from './client/fakturoid-client';
+} from './client/fakturoid-client.js';
 export type {
   AccountInvoicePaymentMethod,
   AccountInfo,
   AccountPlan,
   InvoiceHideBankAccountPaymentMethod,
-} from './resources/account';
-export type { BankAccount } from './resources/bank-accounts';
+} from './resources/account.js';
+export type { BankAccount } from './resources/bank-accounts.js';
 export type {
   Event,
   EventRelatedObject,
   EventRelatedObjectType,
   EventUser,
   ListEventsOptions,
-} from './resources/events';
-export type { ExpensePayment, NewExpensePayment } from './resources/expense-payments';
+} from './resources/events.js';
+export type { ExpensePayment, NewExpensePayment } from './resources/expense-payments.js';
 export type {
   Expense,
   ExpenseActionEvent,
@@ -27,14 +27,14 @@ export type {
   ListExpensesOptions,
   NewExpense,
   UpdateExpense,
-} from './resources/expenses';
+} from './resources/expenses.js';
 export type {
   Generator,
   ListGeneratorsOptions,
   NewGenerator,
   UpdateGenerator,
-} from './resources/generators';
-export type { InboxFile, NewInboxFile } from './resources/inbox-files';
+} from './resources/generators.js';
+export type { InboxFile, NewInboxFile } from './resources/inbox-files.js';
 export type {
   InventoryItem,
   InventoryItemArticleNumberType,
@@ -46,7 +46,7 @@ export type {
   ListInventoryItemsOptions,
   NewInventoryItem,
   UpdateInventoryItem,
-} from './resources/inventory-items';
+} from './resources/inventory-items.js';
 export type {
   InventoryMove,
   InventoryMoveDocument,
@@ -54,9 +54,9 @@ export type {
   ListInventoryMovesOptions,
   NewInventoryMove,
   UpdateInventoryMove,
-} from './resources/inventory-moves';
-export type { SendInvoiceEmailPayload } from './resources/invoice-messages';
-export type { InvoicePayment, NewInvoicePayment } from './resources/invoice-payments';
+} from './resources/inventory-moves.js';
+export type { SendInvoiceEmailPayload } from './resources/invoice-messages.js';
+export type { InvoicePayment, NewInvoicePayment } from './resources/invoice-payments.js';
 export type {
   Invoice,
   InvoiceActionEvent,
@@ -68,15 +68,15 @@ export type {
   ListInvoicesOptions,
   NewInvoice,
   UpdateInvoice,
-} from './resources/invoices';
-export type { NumberFormat, NumberFormatDocumentType } from './resources/number-formats';
+} from './resources/invoices.js';
+export type { NumberFormat, NumberFormatDocumentType } from './resources/number-formats.js';
 export type {
   ActivateRecurringGeneratorPayload,
   ListRecurringGeneratorsOptions,
   NewRecurringGenerator,
   RecurringGenerator,
   UpdateRecurringGenerator,
-} from './resources/recurring-generators';
+} from './resources/recurring-generators.js';
 export type {
   ListSubjectsOptions,
   NewSubject,
@@ -86,21 +86,21 @@ export type {
   SubjectType,
   SubjectWebinvoiceHistory,
   UpdateSubject,
-} from './resources/subjects';
+} from './resources/subjects.js';
 export type {
   ListTodosOptions,
   Todo,
   TodoRelatedObject,
   TodoRelatedObjectType,
-} from './resources/todos';
-export type { CurrentUser, User, UserAccount } from './resources/users';
+} from './resources/todos.js';
+export type { CurrentUser, User, UserAccount } from './resources/users.js';
 export type {
   ListWebhooksOptions,
   NewWebhook,
   UpdateWebhook,
   Webhook,
   WebhookFailedDelivery,
-} from './resources/webhooks';
+} from './resources/webhooks.js';
 export type {
   DateString,
   Environment,
@@ -131,5 +131,5 @@ export type {
   MoneyAmount,
   NumericString,
   PaginationOptions,
-} from './types/common';
-export { FakturoidApiError, paginateAll } from './types/common';
+} from './types/common.js';
+export { FakturoidApiError, paginateAll } from './types/common.js';

@@ -1,4 +1,4 @@
-import type { HttpClient } from '../http/http-client';
+import type { HttpClient } from '../http/http-client.js';
 import type {
   DateString,
   ExpenseDocumentType,
@@ -11,9 +11,9 @@ import type {
   FakturoidVatRateSummary,
   MoneyAmount,
   PaginationOptions,
-} from '../types/common';
-import { paginateAll } from '../types/common';
-import type { ExpensePayment } from './expense-payments';
+} from '../types/common.js';
+import { paginateAll } from '../types/common.js';
+import type { ExpensePayment } from './expense-payments.js';
 
 export type ExpenseStatus = 'open' | 'overdue' | 'paid';
 

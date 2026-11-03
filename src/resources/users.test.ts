@@ -1,7 +1,7 @@
 import { describe, expect, mock, test } from 'bun:test';
-import type { HttpClient } from '../http/http-client';
-import type { FakturoidAuth } from '../types/common';
-import { UsersResource } from './users';
+import type { HttpClient } from '../http/http-client.js';
+import type { FakturoidAuth } from '../types/common.js';
+import { UsersResource } from './users.js';
 
 describe('UsersResource', () => {
   test('getCurrentUser builds GET path without slug', async () => {

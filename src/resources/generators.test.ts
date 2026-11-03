@@ -1,7 +1,7 @@
 import { describe, expect, mock, test } from 'bun:test';
-import type { HttpClient } from '../http/http-client';
-import type { FakturoidAuth } from '../types/common';
-import { GeneratorsResource } from './generators';
+import type { HttpClient } from '../http/http-client.js';
+import type { FakturoidAuth } from '../types/common.js';
+import { GeneratorsResource } from './generators.js';
 
 describe('GeneratorsResource', () => {
   test('list builds path with optional filters', async () => {

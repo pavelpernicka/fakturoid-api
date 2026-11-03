@@ -1,7 +1,7 @@
 import { describe, expect, mock, test } from 'bun:test';
-import type { HttpClient } from '../http/http-client';
-import type { FakturoidAuth } from '../types/common';
-import { BankAccountsResource } from './bank-accounts';
+import type { HttpClient } from '../http/http-client.js';
+import type { FakturoidAuth } from '../types/common.js';
+import { BankAccountsResource } from './bank-accounts.js';
 
 describe('BankAccountsResource', () => {
   test('list builds GET path', async () => {

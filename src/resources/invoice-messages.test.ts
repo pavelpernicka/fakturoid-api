@@ -1,7 +1,7 @@
 import { describe, expect, mock, test } from 'bun:test';
-import type { HttpClient } from '../http/http-client';
-import type { FakturoidAuth } from '../types/common';
-import { InvoiceMessagesResource } from './invoice-messages';
+import type { HttpClient } from '../http/http-client.js';
+import type { FakturoidAuth } from '../types/common.js';
+import { InvoiceMessagesResource } from './invoice-messages.js';
 
 describe('InvoiceMessagesResource', () => {
   test('sendInvoiceByEmail allows empty payload and uses message endpoint', async () => {

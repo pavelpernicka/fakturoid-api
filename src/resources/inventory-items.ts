@@ -1,6 +1,6 @@
-import type { HttpClient } from '../http/http-client';
-import type { DateString, FakturoidAuth, MoneyAmount, PaginationOptions } from '../types/common';
-import { paginateAll } from '../types/common';
+import type { HttpClient } from '../http/http-client.js';
+import type { DateString, FakturoidAuth, MoneyAmount, PaginationOptions } from '../types/common.js';
+import { paginateAll } from '../types/common.js';
 
 export type InventoryItemArticleNumberType = 'ian' | 'ean' | 'isbn';
 

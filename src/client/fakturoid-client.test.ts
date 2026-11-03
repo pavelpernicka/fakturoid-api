@@ -1,6 +1,6 @@
 import { describe, expect, mock, test } from 'bun:test';
-import { FakturoidClient } from './fakturoid-client';
-import type { FakturoidTokenStore } from '../auth/token-store';
+import { FakturoidClient } from './fakturoid-client.js';
+import type { FakturoidTokenStore } from '../auth/token-store.js';
 
 describe('FakturoidClient', () => {
   test('forTenant caches tenant resources', () => {

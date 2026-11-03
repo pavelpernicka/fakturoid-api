@@ -1,6 +1,6 @@
 import { describe, expect, mock, test } from 'bun:test';
-import { FakturoidApiError } from '../types/common';
-import { HttpClient } from './http-client';
+import { FakturoidApiError } from '../types/common.js';
+import { HttpClient } from './http-client.js';
 
 describe('HttpClient', () => {
   const baseUrl = 'https://app.fakturoid.cz';

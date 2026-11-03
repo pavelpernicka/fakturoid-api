@@ -1,11 +1,11 @@
-import type { HttpClient } from '../http/http-client';
+import type { HttpClient } from '../http/http-client.js';
 import type {
   DateString,
   FakturoidAuth,
   FakturoidLanguage,
   FakturoidVatMode,
-} from '../types/common';
-import { paginateAll } from '../types/common';
+} from '../types/common.js';
+import { paginateAll } from '../types/common.js';
 
 export type SubjectType = 'customer' | 'supplier' | 'both';
 

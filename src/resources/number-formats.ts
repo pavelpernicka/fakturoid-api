@@ -1,5 +1,5 @@
-import type { HttpClient } from '../http/http-client';
-import type { DateString, FakturoidAuth } from '../types/common';
+import type { HttpClient } from '../http/http-client.js';
+import type { DateString, FakturoidAuth } from '../types/common.js';
 
 /**
  * Number format as returned by Fakturoid API v3.

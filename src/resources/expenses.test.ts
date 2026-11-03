@@ -1,7 +1,7 @@
 import { describe, expect, mock, test } from 'bun:test';
-import type { HttpClient } from '../http/http-client';
-import type { FakturoidAuth } from '../types/common';
-import { ExpensesResource } from './expenses';
+import type { HttpClient } from '../http/http-client.js';
+import type { FakturoidAuth } from '../types/common.js';
+import { ExpensesResource } from './expenses.js';
 
 describe('ExpensesResource', () => {
   test('list builds path with slug and optional query params', async () => {

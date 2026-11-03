@@ -1,6 +1,6 @@
-import type { FakturoidAppConfig, FakturoidTokens } from '../types/common';
-import { FakturoidApiError } from '../types/common';
-import type { FakturoidTokenStore } from './token-store';
+import type { FakturoidAppConfig, FakturoidTokens } from '../types/common.js';
+import { FakturoidApiError } from '../types/common.js';
+import type { FakturoidTokenStore } from './token-store.js';
 
 export interface AuthorizationUrlOptions {
   tenantId: string;
@@ -75,7 +75,7 @@ export class OAuthService {
     body.set('redirect_uri', this.config.redirectUri);
     body.set('code', params.code);
 
-    const response: Response = await fetch(url, {
+    const response: Response = await (this.config.fetch ?? globalThis.fetch)(url, {
       method: 'POST',
       headers: {
         'User-Agent': this.config.userAgent,
@@ -137,7 +137,7 @@ export class OAuthService {
   public async fetchCurrentUserSlug(accessToken: string): Promise<string | null> {
     const baseUrl = this.resolveBaseUrl();
     const url = new URL(USER_PATH, baseUrl);
-    const response = await fetch(url, {
+    const response = await (this.config.fetch ?? globalThis.fetch)(url, {
       method: 'GET',
       headers: {
         'User-Agent': this.config.userAgent,
@@ -166,7 +166,7 @@ export class OAuthService {
     const body = new URLSearchParams();
     body.set('grant_type', 'client_credentials');
 
-    const response: Response = await fetch(url, {
+    const response: Response = await (this.config.fetch ?? globalThis.fetch)(url, {
       method: 'POST',
       headers: {
         'User-Agent': this.config.userAgent,
@@ -216,7 +216,10 @@ export class OAuthService {
         ? this.refreshTokens(tenantId, current.refreshToken)
         : this.obtainClientCredentialsToken(tenantId, current.fakturoidSlug);
       this.refreshPromises.set(tenantId, pending);
-      pending.finally(() => this.refreshPromises.delete(tenantId));
+      void pending.then(
+        () => this.refreshPromises.delete(tenantId),
+        () => this.refreshPromises.delete(tenantId),
+      );
     }
     return pending;
   }
@@ -229,7 +232,7 @@ export class OAuthService {
     body.set('grant_type', 'refresh_token');
     body.set('refresh_token', refreshToken);
 
-    const response: Response = await fetch(url, {
+    const response: Response = await (this.config.fetch ?? globalThis.fetch)(url, {
       method: 'POST',
       headers: {
         'User-Agent': this.config.userAgent,
@@ -270,7 +273,7 @@ export class OAuthService {
     const baseUrl = this.resolveBaseUrl();
     const url = new URL(REVOKE_PATH, baseUrl);
 
-    const response: Response = await fetch(url, {
+    const response: Response = await (this.config.fetch ?? globalThis.fetch)(url, {
       method: 'POST',
       headers: {
         'User-Agent': this.config.userAgent,

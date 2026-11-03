@@ -1,236 +1,82 @@
-# Fakturoid TypeScript API
+# Fakturoid API for TypeScript
 
-TypeScript SDK for the [Fakturoid API v3](https://www.fakturoid.cz/api/v3), built for backend use cases, OAuth-based multi-tenant apps, and strongly typed integrations.
+A backend client for [Fakturoid API v3](https://www.fakturoid.cz/api/v3), targeting Node.js 24 and newer. This is a fork of [thinkhome-org/fakturoid-typescript-api](https://github.com/thinkhome-org/fakturoid-typescript-api), distributed under the original Apache-2.0 license.
 
-The library is designed around tenant-scoped access to Fakturoid accounts. It handles OAuth token exchange, token refresh, account slug discovery, and exposes typed resource clients for the main Fakturoid API endpoints.
-
-The repository uses Bun as the primary package manager, test runner, and release toolchain. Node.js remains a supported runtime target for consumers of the published package. The package is published under the scoped name `@thinkhome-org/fakturoid-typescript-api`.
-
-## Features
-
-- TypeScript-first API client with exported request and response types
-- OAuth 2.0 Authorization Code flow support
-- Multi-tenant architecture via pluggable token storage
-- Account slug resolution from `GET /api/v3/user.json`
-- Resource clients for invoices, subjects, expenses, generators, webhooks, inventory, and more
-- Backend-friendly design with no framework lock-in
-
-## Documentation
-
-For comprehensive guides, implementation details, and examples covering Authentication, Token Storage, Resource Clients, and Type Safety, please visit our **[GitHub Wiki](https://github.com/thinkhome-org/fakturoid-typescript-api/wiki)**.
+The fork adds Node.js ESM-compatible imports, injectable HTTP transport, and safe write semantics: POST, PATCH, PUT and DELETE requests are never automatically retried. A failed write can have succeeded remotely; reconcile by your own reference before deciding what to do next. Fakturoid's `custom_id` filter is useful for recovery but is not a server-side idempotency guarantee.
 
 ## Installation
 
-```bash
-bun add @thinkhome-org/fakturoid-typescript-api
+Use a versioned release archive or pin a Git commit. Git installations run `prepare` to build the TypeScript sources; Bun is needed only for development tests.
+
+```sh
+npm install https://github.com/pavelpernicka/fakturoid-api/releases/download/v0.1.4/pavelpernicka-fakturoid-api-0.1.4.tgz
 ```
 
-Node.js / npm fallback:
-
-```bash
-npm install @thinkhome-org/fakturoid-typescript-api
-```
-
-## Quick Start
+## Single-account integration
 
 ```ts
-import { createFakturoidClient } from '@thinkhome-org/fakturoid-typescript-api';
+import {
+  createFakturoidClient,
+  type FakturoidTokens,
+} from '@pavelpernicka/fakturoid-api';
 
+let tokens: FakturoidTokens | null = null;
 const client = createFakturoidClient({
   config: {
     clientId: process.env.FAKTUROID_CLIENT_ID!,
     clientSecret: process.env.FAKTUROID_CLIENT_SECRET!,
-    redirectUri: 'https://yourapp.com/api/fakturoid/callback',
-    userAgent: 'YourAppName (you@example.com)',
+    userAgent: 'MyApplication (technical-contact@example.com)',
+    redirectUri: '', // Only used by Authorization Code flow.
     environment: 'production',
   },
-  tokenStore: yourTokenStoreImplementation,
+  tokenStore: {
+    async getTokens() { return tokens; },
+    async saveTokens(_tenantId, value) { tokens = value; },
+    async deleteTokens() { tokens = null; },
+  },
 });
-
-const authorizationUrl = client.getAuthorizationUrl('tenant-123', 'opaque-state');
-
-await client.handleOAuthCallback({
-  code: 'oauth-code',
-  state: 'opaque-state',
-  tenantId: 'tenant-123',
-});
-
-const fakturoid = client.forTenant('tenant-123');
-const account = await fakturoid.account.getAccountInfo();
-const invoices = await fakturoid.invoices.list();
-const subjects = await fakturoid.subjects.list();
+const account = await client.connectWithClientCredentials('local-account', 'your-account-slug');
+const invoices = await account.invoices.list({ page: 1 });
 ```
 
-## Core Concepts
+Supply the account slug explicitly when a login has multiple accounts. Access tokens are renewed before expiry. Keep credentials and tokens on the server. A production token store must isolate tenants; the example is for one account in one process.
 
-### 1. Token Store
+Authorization Code flow remains available via `getAuthorizationUrl`, `handleOAuthCallback` and `forTenant`. The application must generate and validate OAuth `state` and bind the callback to the correct user/tenant before invoking the SDK.
 
-You provide your own `FakturoidTokenStore` implementation. This keeps the SDK storage-agnostic and suitable for Convex, PostgreSQL, Redis, DynamoDB, or custom persistence layers.
+`environment: 'test'` is metadata, **not a sandbox switch**. Both environments use the real Fakturoid API. Use a separate Fakturoid test account and credentials for live tests.
 
-The SDK stores:
+## Cancellation and transport
 
-- `accessToken`
-- `refreshToken`
-- `expiresAt`
-- `scope`
-- `fakturoidAccountId`
-- `fakturoidSlug`
-
-### 2. Tenant-Scoped Resources
-
-After OAuth is completed, use `client.forTenant(tenantId)` to get resource clients bound to one tenant's tokens and Fakturoid account slug.
-
-### 3. Account Slug Resolution
-
-Fakturoid API v3 uses account-scoped routes in the form:
-
-```text
-/api/v3/accounts/{slug}/...
-```
-
-The SDK resolves the slug automatically after OAuth and stores it in the token store, so resource calls can work without additional manual setup.
-
-## Authentication Flow
-
-Typical backend flow:
-
-1. Create the client with your app configuration and token store.
-2. Redirect the user to `client.getAuthorizationUrl(tenantId, state)`.
-3. Handle the callback and call `client.handleOAuthCallback(...)`.
-4. Use `client.forTenant(tenantId)` for all subsequent API calls.
-
-## Resource Clients
-
-Each tenant client exposes typed resource modules:
-
-- `account`
-- `bankAccounts`
-- `events`
-- `expensePayments`
-- `expenses`
-- `generators`
-- `inboxFiles`
-- `inventoryItems`
-- `inventoryMoves`
-- `invoiceMessages`
-- `invoicePayments`
-- `invoices`
-- `numberFormats`
-- `recurringGenerators`
-- `subjects`
-- `todos`
-- `users`
-- `webhooks`
-
-Example:
+Inject `config.fetch` to apply a job's cancellation signal to both OAuth and resource requests. Do not change global `fetch` in application code.
 
 ```ts
-const tenant = client.forTenant('tenant-123');
-
-const invoice = await tenant.invoices.create({
-  subject_id: 123,
-  lines: [
-    {
-      name: 'Consulting',
-      quantity: 2,
-      unit_price: 2500,
-    },
-  ],
+const transport: typeof fetch = (input, init) => fetch(input, {
+  ...init,
+  redirect: 'error',
+  signal: AbortSignal.any([
+    jobSignal,
+    ...(init?.signal ? [init.signal] : []),
+  ]),
 });
+// Pass transport as config.fetch when constructing the client for this job.
 ```
 
-## Type Safety
+GET requests retry selected transient HTTP errors. Write failures propagate without retry. Decimal money values are preserved as returned by the API; applications must avoid floating-point arithmetic for settlement checks. Responses are TypeScript-typed, not runtime-schema validated.
 
-The package exports shared domain types and resource-specific payloads, for example:
-
-- `NewInvoice`, `UpdateInvoice`, `Invoice`
-- `NewSubject`, `UpdateSubject`, `Subject`
-- `NewExpense`, `UpdateExpense`, `Expense`
-- `NewGenerator`, `RecurringGenerator`
-- `FakturoidDocumentLine`, `FakturoidVatRate`, `MoneyAmount`
-
-This makes it suitable for backend services, internal SDK wrappers, and typed app integrations.
-
-## Convex / Server Integration
-
-The SDK is framework-agnostic, but it fits naturally into backend runtimes such as:
-
-- Convex
-- Next.js API routes
-- Express
-- Fastify
-- NestJS
-- serverless functions
-
-For Convex-style usage, a typical pattern is:
-
-- `getFakturoidClient(ctx)` to construct the SDK with your token store
-- `startFakturoidOAuth(ctx, tenantId)` to initiate OAuth
-- `completeFakturoidOAuth(ctx, params)` to finalize OAuth and persist tokens
-
-## Documentation Alignment
-
-This repository is being aligned against the provided Fakturoid API v3 documentation with emphasis on:
-
-- required vs. optional fields
-- read-only vs. write-only fields
-- request payload correctness
-- response type fidelity
-
-Audit notes live in [docs/AUDIT.md](/Users/samuel/projects/fakturoid-typescript-api/docs/AUDIT.md).
+Available resources include invoices, invoice payments, contacts, account/bank data, events, webhooks, expenses, recurring documents and inventory. See the exported types and [official API documentation](https://www.fakturoid.cz/api/v3).
 
 ## Development
 
-Install dependencies:
+Node.js 24 and Bun 1.3.5 are used in CI.
 
-```bash
-bun install
-```
-
-Build:
-
-```bash
-bun run build
-```
-
-Type-check:
-
-```bash
+```sh
+bun install --frozen-lockfile
 bun run typecheck
+bun test src
+npm run test:node
+npm pack
 ```
 
-Test:
+The upstream unit suite runs in Bun; additional regression tests run against the compiled package in Node.js. CI also installs the packed archive in a clean directory and checks its public ESM entry point. Live integration tests are opt-in (`bun run test:integration`) and require a dedicated test account; do not run them against production.
 
-```bash
-bun test
-```
-
-Format and lint:
-
-```bash
-bun run format
-bun run lint
-```
-
-## Publishing
-
-- `Publish to npmjs` publishes the package to the public npm registry using Bun-native `bun publish`.
-- `Publish to GitHub npm Registry` publishes the same scoped package to GitHub Packages using Bun-native registry configuration.
-- Both release workflows resolve the Bun version from `package.json` and do not depend on `setup-node`.
-
-## Integration Tests
-
-Tests in `tests/integration/` require real Fakturoid credentials. Depending on your setup, configure environment variables such as:
-
-- `FAKTUROID_CLIENT_ID`
-- `FAKTUROID_CLIENT_SECRET`
-- `FAKTUROID_REFRESH_TOKEN`
-
-The SDK can obtain the account slug automatically after token refresh.
-
----
-
-<div align="center">
-  Maintained by <strong>ThinkHome s.r.o.</strong><br>
-  <a href="https://thinkhome.org">thinkhome.org</a> • IČ: 23893591 • DIČ: CZ23893591
-</div>
+On a pushed version tag (`vX.Y.Z`), the release workflow verifies the tag against `package.json`, runs checks, builds and attaches the npm archive. It does not publish to the upstream package or require an npm token.
